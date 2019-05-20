@@ -1,0 +1,14 @@
+title Single page app uusi muistiinpano
+
+note over Selain:
+Käyttäjä kirjoittaa uuden muistiinpanon ja painaa talleta-painiketta
+end note
+
+note over Selain:
+Javascript-tiedostossa määritelty koodi hakee sivulta lomake-elementin.
+Tämän jälkeen se luo muistiinpanon, lisää sen listalle, piirtää listan uudestaan ja
+lähettää uuden muistiinpanon palvelimelle.
+end note
+
+Selain->Palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+Palvelin->Selain: Status code 201

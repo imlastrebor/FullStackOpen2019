@@ -1,0 +1,23 @@
+title Uuden muistiinpanon luonti
+note over Selain:
+Tekstikenttään kirjoitettu muistiinpano ja painettu nappia.
+end note
+Selain->Palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+note over Palvelin:
+Palvelimelle osoitteeseen new_notes tullut pyyntö käsitellään ja siihen vastataan uudelleenohjauspyyntöna
+end note
+Palvelin->Selain: Status code 302
+note over Selain:
+Selain tekee automaattisesti uuden pyynnön osoitteeseen notes
+end note
+Selain->Palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+Palvelin->Selain: HTML-koodi
+Selain->Palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Palvelin->Selain: main.css
+Selain->Palvelin: https://fullstack-exampleapp.herokuapp.com/main.js
+Palvelin->Selain: main.js
+Selain->Palvelin: https://fullstack-exampleapp.herokuapp.com/data.json
+Palvelin->Selain: [{content: "0", date: "2019-04-24T16:22:30.344Z"}...]
+
+
+
