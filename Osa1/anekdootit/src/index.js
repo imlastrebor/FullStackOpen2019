@@ -6,6 +6,15 @@ const Button = ({handleClick, text}) => (
     <button onClick={handleClick}>{text}</button>
 )
 
+const Votes = ({votes}) => {
+
+    return(
+        <div>
+            <p>has {votes} votes</p>
+        </div>
+    )
+}
+
 const anecdotes = [
     'If it hurts, do it more often',
     'Adding manpower to a late software project makes it later!',
@@ -17,11 +26,11 @@ const anecdotes = [
 
 
 
+
 const App = (props) => {
 
     const [selected, setSelected] = useState(0)
-    const votes = []
-
+    const [votesCount, setVotesCount] = useState([])
 
 
     const randomAnecdote = (random) => {
@@ -44,78 +53,36 @@ const App = (props) => {
         }
 
             return (
-                console.log(randomNumbers[randomNumber]),
-               // console.log(randomNumbers),
                 randomNumbers[randomNumber]
             )
     }
-
-    
-    const voteSystem =  () =>{
-        
+    const voteSystem = () => {
         let i
-        let copy
-
-        if (Array.isArray(votes) && votes.length < 1) {
-
+        if (votesCount.length < 1) {
+            
             for (i = 0; i < anecdotes.length; i++) {
-                votes.push(i)
+                votesCount.push(0)
             }
-                votes.fill(0)
-                copy = [...votes]
-                copy[selected] = copy[selected] + 2
-                return(
-                    copy[selected],
-                    console.log(votes),
-                    console.log(copy),
-                    console.log(copy[selected])
-                )
-        }
 
-        else{
-            return(
-                copy = [...votes],
-                copy[selected] = copy[selected] + 1,
-                copy[selected],
-                console.log(copy),
-                console.log(copy[selected])
-                // console.log(votes[selected]),
-                // console.log(votes)
-            )
         }
+        votesCount[selected] += 1
+            setVotesCount([
+            
+            ...votesCount,
+        ])
+
     }
+    console.log(votesCount)
 
-
-    //Toimii melkein... kuitenkin nollaa arrayn
-    // const voteSystem =  () =>{
-        
-    //     let i
-
-    //     if (Array.isArray(votes) && votes.length < 1) {
-
-    //         for (i = 0; i < anecdotes.length; i++) {
-    //             votes.push(i)
-    //         }
-    //             votes.fill(0)
-    //     }
-
-
-    //     return(
-    //         votes[selected] = votes[selected] + 1,
-    //         votes[selected],
-    //         console.log(votes),
-    //         console.log(votes[selected])
-    //     )
-        
-    // }
 
   return (
     <div>
       {props.anecdotes[selected]}
-      <br/>
-      <br/>
+      <Votes votes={votesCount[selected]} />
       <Button text="next anecdote" handleClick={randomAnecdote(randomTest)}/>
       <Button text="vote" handleClick={voteSystem}/>
+
+
     </div>
   )
 }
