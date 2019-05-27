@@ -1,19 +1,34 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Header = ({headerText}) => {
+    return(
+    <div>
+        <h1>{headerText}</h1>
+    </div>
+    )
+}
 
 const Button = ({handleClick, text}) => (
     <button onClick={handleClick}>{text}</button>
 )
 
-const Votes = ({votes}) => {
+const Votes = ({votes, totalVotes}) => {
 
+    if (totalVotes.length < 1) {
+        return(
+            <div>
+                <p>no votes yet</p>
+            </div>
+        )
+    }
     return(
         <div>
             <p>has {votes} votes</p>
         </div>
     )
 }
+
 
 const anecdotes = [
     'If it hurts, do it more often',
@@ -31,6 +46,9 @@ const App = (props) => {
 
     const [selected, setSelected] = useState(0)
     const [votesCount, setVotesCount] = useState([])
+    //Checks the index of array element that has highest value
+    const mostVoted = votesCount.indexOf(Math.max(...votesCount))
+    
 
 
     const randomAnecdote = (random) => {
@@ -40,7 +58,7 @@ const App = (props) => {
         }
     }
 
-    const randomTest = () => {
+    const randomNumGen = () => {
         //create random number
         const randomNumber = Math.floor(Math.random() * 6)
         //create empty array
@@ -56,6 +74,7 @@ const App = (props) => {
                 randomNumbers[randomNumber]
             )
     }
+    
     const voteSystem = () => {
         let i
         if (votesCount.length < 1) {
@@ -69,18 +88,22 @@ const App = (props) => {
             setVotesCount([
             
             ...votesCount,
+            
         ])
-
+        
     }
     console.log(votesCount)
 
 
   return (
     <div>
-      {props.anecdotes[selected]}
-      <Votes votes={votesCount[selected]} />
-      <Button text="next anecdote" handleClick={randomAnecdote(randomTest)}/>
-      <Button text="vote" handleClick={voteSystem}/>
+        <Header headerText="Anecdote of the day"/> 
+        {props.anecdotes[selected]}
+        <Votes votes={votesCount[selected]} totalVotes={votesCount} />
+        <Button text="next anecdote" handleClick={randomAnecdote(randomNumGen)}/>
+        <Button text="vote" handleClick={voteSystem}/>
+        <Header headerText="Anecdote with most votes" /> 
+        {props.anecdotes[mostVoted]}
 
 
     </div>
