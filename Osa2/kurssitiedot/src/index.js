@@ -40,7 +40,6 @@ const Content = ({course}) => {
     const part = () => course.map((title) => {
       return(
       title.parts.map((partname) => {
-        console.log(partname.exercises)
         return(
             <Part 
                 key={partname.id}
@@ -61,18 +60,27 @@ const Content = ({course}) => {
 
 const Total = ({course}) => {
 
-    const totalCount = () => course.map(part => {
-    return    part.exercises
-    
+
+  const totalCount = () => course.map((testi) => {
+    return(
+    testi.parts.map((testi1) => {
+      console.log(testi1)
+      return    testi1.exercises
     }).reduce((total, amount) =>{
-        return  total + amount
-    })
+      return  total + amount
+  })
+    )
+  })
 
     return(
         <div>
            <p>yhteensä {totalCount()} kurssia</p>
         </div>
     )
+
+
+
+
     
 }
 
