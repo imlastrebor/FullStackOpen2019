@@ -10,19 +10,19 @@ const Header = ({header}) =>{
                 {header}
             </h1>
         </div>
-    )
-}
+    );
+};
 
-const Part = ({part, header}) => {
+const Part = ({part, keyPart, title}) => {
 
-    return(
+  return(
       <div>
         <p> 
-          {part.name}
+          {part.name} {part.exercises}
         </p>
       </div>
-)
-}
+  );
+};
 
 const Content = ({course}) => {
 
@@ -32,8 +32,8 @@ const Content = ({course}) => {
             key={header.id}
             header={header.name}
         /> 
-    )
-})
+    );
+});
 
 
 
@@ -45,44 +45,57 @@ const Content = ({course}) => {
                 key={partname.id}
                 part={partname}
             /> 
-        )
+        );
       })
-      )
-    })
+      );
+    });
 
   return(
       <div>
           {header()}
           {part()}
       </div>
-  )
-}
+  );
+};
 
 const Total = ({course}) => {
 
 
-  const totalCount = () => course.map((testi) => {
+  let exercisesAll = course.map((testi) => {
     return(
     testi.parts.map((testi1) => {
-      console.log(testi1)
       return    testi1.exercises
-    }).reduce((total, amount) =>{
-      return  total + amount
-  })
-    )
-  })
+    })
+    );
+  });
+
+  let totalExercises = exercisesAll.flat()
+
+  const totalCount = () => totalExercises.reduce((acc, cur) => acc + cur)
+
+  // const totalCount = () => course.map((testi) => {
+  //   return(
+  //   testi.parts.map((testi1) => {
+  //     console.log(testi1.exercises);
+  //     return    testi1.exercises
+  //   }).reduce((total, amount) =>{
+
+  //     return  total + amount
+  // })
+  //   )
+  // })
 
     return(
         <div>
            <p>yhteensä {totalCount()} kurssia</p>
         </div>
-    )
+    );
 
 
 
 
     
-}
+};
 
 
 const Course = ({course}) => {
@@ -151,44 +164,3 @@ const App = () => {
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-
-  // const courses = [
-  //   {
-  //     name: 'Half Stack -sovelluskehitys',
-  //     id: 1,
-  //     parts: [
-  //       {
-  //         name: 'Reactin perusteet',
-  //         exercises: 10,
-  //         id: 1
-  //       },
-  //       {
-  //         name: 'Tiedonvälitys propseilla',
-  //         exercises: 7,
-  //         id: 2
-  //       },
-  //       {
-  //         name: 'Komponenttien tila',
-  //         exercises: 14,
-  //         id: 3
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     name: 'Node.js',
-  //     id: 2,
-  //     parts: [
-  //       {
-  //         name: 'Routing',
-  //         exercises: 3,
-  //         id: 1
-  //       },
-  //       {
-  //         name: 'Middlewaret',
-  //         exercises: 7,
-  //         id: 2
-  //       }
-  //     ]
-  //   }
-  // ]
