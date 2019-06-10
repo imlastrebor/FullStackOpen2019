@@ -1,5 +1,36 @@
 import React, { useState } from "react";
 
+const Button = ({ text, mission }) => {
+  return (
+    <div>
+      <button onClick={mission}> {text} </button>
+    </div>
+  );
+};
+
+const Input = ({ content, handle }) => {
+  return (
+    <div>
+      <input value={content} onChange={handle} />
+    </div>
+  );
+};
+const PersonForm = props => {
+  return (
+    <>
+      <form>
+        <Input content={props.contentName} handle={props.handleName} />
+        <Input content={props.contentNumber} handle={props.handleNumber} />
+        <Button text={props.text} mission={props.mission} />
+      </form>
+    </>
+  );
+};
+
+const Persons = ({ personInfo }) => {
+  return <ul>{personInfo}</ul>;
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
 
@@ -38,31 +69,29 @@ const App = () => {
 
   const personInfo = uniq.map(person => {
     return (
-      <p key={person.id}>
+      <li key={person.id}>
         {person.name} {person.number}
-      </p>
+      </li>
     );
   });
 
   return (
     <div>
       <h2>Puhelinluettelo</h2>
-      <form>
-        <h2>Lisää uusi</h2>
-        <div>
-          nimi: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          numero: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit" onClick={addInfo}>
-            lisää
-          </button>
-        </div>
-      </form>
+
+      <h2>Lisää uusi</h2>
+
+      <PersonForm
+        contentName={newName}
+        handleName={handleNameChange}
+        contentNumber={newNumber}
+        handleNumber={handleNumberChange}
+        text="lisää"
+        mission={addInfo}
+      />
+
       <h2>Numerot</h2>
-      <> {personInfo} </>
+      <Persons personInfo={personInfo} />
     </div>
   );
 };
