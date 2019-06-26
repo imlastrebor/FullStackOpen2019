@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import serverService from "./services/server";
 
 const Button = ({ text, mission }) => {
   return (
-    <div>
+    <>
       <button onClick={mission}> {text} </button>
-    </div>
+    </>
   );
 };
 
@@ -17,11 +18,6 @@ const Input = ({ field, content, handle }) => {
   );
 };
 
-// const FilteredNames = props => {
-//   const result = props.nameSearch(props.uniqueNames, props.filter);
-//   return <li>{result}</li>;
-// };
-
 const Filter = props => {
   return (
     <>
@@ -32,13 +28,6 @@ const Filter = props => {
           handle={props.handleFilter}
         />
       </form>
-      {/* <ul>
-        <FilteredNames
-          nameSearch={props.nameSearch}
-          uniqueNames={props.uniqueNames}
-          filter={props.filter}
-        />
-      </ul> */}
     </>
   );
 };
@@ -65,14 +54,14 @@ const PersonForm = props => {
 
 const PersonInfo = props => {
   if (props.filter.length > 0) {
-    // const result = props.nameSearch(props.uniqueNames, props.filter);
     const result = props.uniqueNames.filter(o =>
       o.name.toLocaleLowerCase().includes(props.filter.toLocaleLowerCase())
     );
     return result.map(person => {
       return (
         <li key={person.id}>
-          {person.name} {person.number}
+          {person.name} {person.number}{" "}
+          <Button text="Delete" mission={props.deleteMission} />
         </li>
       );
     });
@@ -80,7 +69,29 @@ const PersonInfo = props => {
     return props.unique.map(person => {
       return (
         <li key={person.id}>
-          {person.name} {person.number}
+          {person.name} {person.number}{" "}
+          <Button
+            text="Delete"
+            mission={() => {
+              if (
+                window.confirm(
+                  `Haluatko varmasti poistaa henkilön ${person.name} ?`
+                )
+              ) {
+                axios.delete("http://localhost:3001/persons/" + person.id);
+              }
+            }}
+          />
+          {/* <button
+            onClick={() =>
+              axios
+                .delete("http://localhost:3001/persons/" + person.id)
+                .then(console.log("Deleted: " + person.id))
+                .catch(err => console.log(err))
+            }
+          >
+            Delete
+          </button> */}
         </li>
       );
     });
@@ -92,9 +103,9 @@ const Persons = props => {
     <ul>
       <PersonInfo
         unique={props.unique}
-        // nameSearch={props.nameSearch}
         uniqueNames={props.uniqueNames}
         filter={props.filter}
+        persons={props.persons}
       />
     </ul>
   );
@@ -110,17 +121,17 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("lisää numero");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response => {
-      setPersons(response.data);
+    serverService.getAll().then(initialPersons => {
+      setPersons(initialPersons);
     });
-  }, []);
+  }, [persons]);
 
   const addInfo = e => {
     e.preventDefault();
     const listObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
+      id: persons.length + Math.floor(Math.random() * 100)
     };
     setPersons(persons.concat(listObject));
     setFilter("");
@@ -128,8 +139,19 @@ const App = () => {
     setNewNumber("");
     if (persons.find(duplicate => duplicate.name === newName)) {
       alert(`${newName} on jo listalla`);
+    } else {
+      serverService.create(listObject);
     }
   };
+
+  const unique = Array.from(new Set(persons.map(uniqArr => uniqArr.name))).map(
+    name => {
+      return persons.find(uniqArr => uniqArr.name === name);
+    }
+  );
+  const uniqueNames = unique.map(person => {
+    return person;
+  });
 
   const handleFilter = e => {
     setFilter(e.target.value);
@@ -142,33 +164,22 @@ const App = () => {
   const handleNumberChange = e => {
     setNewNumber(e.target.value);
   };
-
-  const unique = Array.from(new Set(persons.map(uniqArr => uniqArr.name))).map(
-    name => {
-      return persons.find(uniqArr => uniqArr.name === name);
-    }
-  );
-
-  const uniqueNames = unique.map(person => {
-    return person;
-  });
-
-  // const nameSearch = (arr, string) => {
-  //   const search = arr.filter(o =>
-  //     o.toLocaleLowerCase().includes(string.toLocaleLowerCase())
-  //   );
-  //   return search;
+  // const handleRemove = id => {
+  //   axios
+  //     .delete("http://localhost:3001/persons", { params: { id: id } })
+  //     .then(response => {
+  //       console.log(response);
+  //     });
   // };
-  // console.log(nameSearch(uniqueNames, filter));
 
-  // const result = uniqueNames.filter(o =>
-  //   o.name.toLocaleLowerCase().includes(newName.toLocaleLowerCase())
-  // );
-  // console.log(
-  //   result.map(nimi => {
-  //     return nimi.name;
-  //   })
-  // );
+  // const handleRemove = e => {
+  //   e.preventDefault();
+  //   axios.delete("http://localhost:3001/persons/4").then(res => {
+  //     console.log(res);
+  //     console.log(res.data);
+  //     console.log(persons);
+  //   });
+  // };
 
   return (
     <div>
@@ -197,9 +208,9 @@ const App = () => {
       <h2>Numerot</h2>
       <Persons
         unique={unique}
-        // nameSearch={nameSearch}
         uniqueNames={uniqueNames}
         filter={filter}
+        persons={persons}
       />
     </div>
   );
