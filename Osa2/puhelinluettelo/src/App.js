@@ -61,7 +61,18 @@ const PersonInfo = props => {
       return (
         <li key={person.id}>
           {person.name} {person.number}{" "}
-          <Button text="Delete" mission={props.deleteMission} />
+          <Button
+            text="Delete"
+            mission={() => {
+              if (
+                window.confirm(
+                  `Haluatko varmasti poistaa henkilön ${person.name} ?`
+                )
+              ) {
+                axios.delete("http://localhost:3001/persons/" + person.id);
+              }
+            }}
+          />
         </li>
       );
     });
@@ -138,11 +149,34 @@ const App = () => {
     setNewName("");
     setNewNumber("");
     if (persons.find(duplicate => duplicate.name === newName)) {
-      alert(`${newName} on jo listalla`);
+      if (
+        window.confirm(
+          `${newName} on jo listalla. Korvataanko vanha numero uudella?`
+        )
+      ) {
+        axios.put(
+          "http://localhost:3001/persons/" +
+            persons.find(test => test.name === newName).id,
+          {
+            name: `${newName}`,
+            number: `${newNumber}`
+          }
+        );
+      }
     } else {
       serverService.create(listObject);
     }
   };
+  //   if (persons.find(duplicate => duplicate.name === newName)) {
+  //     alert(`${newName} on jo listalla. Korvataanko vanha numero uudella?`);
+  //     console.log(
+  //       persons.map(person => person).map(personInfo => personInfo.id)
+  //     );
+  //     console.log(persons.find(test => test.name === newName).id);
+  //   } else {
+  //     serverService.create(listObject);
+  //   }
+  // };
 
   const unique = Array.from(new Set(persons.map(uniqArr => uniqArr.name))).map(
     name => {
