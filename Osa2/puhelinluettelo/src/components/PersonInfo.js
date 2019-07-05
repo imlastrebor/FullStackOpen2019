@@ -19,7 +19,7 @@ const PersonInfo = props => {
                   `Haluatko varmasti poistaa henkilön ${person.name} ?`
                 )
               ) {
-                axios.delete("http://localhost:3001/persons/" + person.id);
+                axios.delete("/persons/" + person.id);
                 props.setErrorMessage(
                   `Henkilö ${person.name} on poistettu listalta`
                 );
@@ -45,7 +45,7 @@ const PersonInfo = props => {
                   `Haluatko varmasti poistaa henkilön ${person.name} ?`
                 )
               ) {
-                axios.delete("http://localhost:3001/persons/" + person.id);
+                axios.delete("/persons/" + person.id);
                 props.setErrorMessage(
                   `Henkilö ${person.name} on poistettu listalta`
                 );
