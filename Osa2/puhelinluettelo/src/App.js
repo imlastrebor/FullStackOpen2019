@@ -36,10 +36,13 @@ const App = () => {
           `Henkilö ${newName} on jo listalla. Korvataanko vanha numero uudella?`
         )
       ) {
-        axios.put("/persons" + persons.find(test => test.name === newName).id, {
-          name: `${newName}`,
-          number: `${newNumber}`
-        });
+        axios.put(
+          "/persons/" + persons.find(test => test.name === newName).id,
+          {
+            name: `${newName}`,
+            number: `${newNumber}`
+          }
+        );
         console.log();
 
         setErrorMessage(`Henkilön ${newName} numero on päivitetty`);
