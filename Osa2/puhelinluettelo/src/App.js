@@ -5,6 +5,7 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Notification from "./components/Notification";
+import NotificationErr from "./components/NotificationErr";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,6 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState("lisää nimi");
   const [newNumber, setNewNumber] = useState("lisää numero");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [okMessage, setOkMessage] = useState(null);
 
   useEffect(() => {
     serverService.getAll().then(initialPersons => {
@@ -43,19 +45,36 @@ const App = () => {
             number: `${newNumber}`
           }
         );
-        console.log();
 
-        setErrorMessage(`Henkilön ${newName} numero on päivitetty`);
+        setOkMessage(`Henkilön ${newName} numero on päivitetty`);
         setTimeout(() => {
-          setErrorMessage(null);
+          setOkMessage(null);
         }, 4000);
       }
+      // } else {
+      //   serverService.create(listObject);
+      //   setErrorMessage(`Henkilö ${newName} lisätty listaan`);
+      //   setTimeout(() => {
+      //     setErrorMessage(null);
+      //   }, 4000);
+      // }
+      // Tehtävä 3.20
     } else {
-      serverService.create(listObject);
-      setErrorMessage(`Henkilö ${newName} lisätty listaan`);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 4000);
+      serverService
+        .create(listObject)
+        .then(response => {
+          setPersons(persons.concat(response));
+          setOkMessage(`Henkilö ${newName} lisätty listaan`);
+          setTimeout(() => {
+            setOkMessage(null);
+          }, 4000);
+        })
+        .catch(error => {
+          setErrorMessage(error.response.data.error);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 4000);
+        });
     }
   };
   const unique = Array.from(new Set(persons.map(uniqArr => uniqArr.name))).map(
@@ -83,7 +102,8 @@ const App = () => {
     <div>
       <h2>Puhelinluettelo</h2>
 
-      <Notification message={errorMessage} />
+      <Notification message={okMessage} />
+      <NotificationErr message={errorMessage} />
 
       <Filter
         text="hae nimellä"
@@ -111,7 +131,7 @@ const App = () => {
         uniqueNames={uniqueNames}
         filter={filter}
         persons={persons}
-        setErrorMessage={setErrorMessage}
+        setOkMessage={setOkMessage}
       />
     </div>
   );

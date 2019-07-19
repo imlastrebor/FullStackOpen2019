@@ -20,11 +20,11 @@ const PersonInfo = props => {
                 )
               ) {
                 axios.delete("/persons/" + person.id);
-                props.setErrorMessage(
+                props.setOkMessage(
                   `Henkilö ${person.name} on poistettu listalta`
                 );
                 setTimeout(() => {
-                  props.setErrorMessage(null);
+                  props.setOkMessage(null);
                 }, 4000);
               }
             }}
@@ -46,11 +46,11 @@ const PersonInfo = props => {
                 )
               ) {
                 axios.delete("/persons/" + person.id);
-                props.setErrorMessage(
+                props.setOkMessage(
                   `Henkilö ${person.name} on poistettu listalta`
                 );
                 setTimeout(() => {
-                  props.setErrorMessage(null);
+                  props.setOkMessage(null);
                 }, 4000);
               }
             }}

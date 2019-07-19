@@ -9,7 +9,7 @@ const Persons = props => {
         uniqueNames={props.uniqueNames}
         filter={props.filter}
         persons={props.persons}
-        setErrorMessage={props.setErrorMessage}
+        setOkMessage={props.setOkMessage}
       />
     </ul>
   );
